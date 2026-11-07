@@ -1355,3 +1355,59 @@ textarea:focus-visible {
     color: #dc2626;
     text-align: center;
 }
+
+
+.entrevista-respuestas-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.respuesta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    padding: 14px;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    background: #fff;
+}
+
+.respuesta-item strong {
+    color: #475569;
+    font-size: 13px;
+}
+
+.respuesta-item span {
+    color: #1e293b;
+    font-size: 14px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.entrevista-seccion-titulo {
+    margin-bottom: 16px;
+}
+
+.entrevista-seccion-titulo h3 {
+    margin-bottom: 5px;
+}
+
+.entrevista-seccion-titulo span {
+    color: #64748b;
+    font-size: 13px;
+}
+
+.entrevista-fecha {
+    margin-top: 16px;
+    padding: 12px;
+    background: #f8fafc;
+    border-radius: 8px;
+}
+
+@media (max-width: 600px) {
+    .entrevista-respuestas-grid {
+        grid-template-columns: 1fr;
+    }
+}
