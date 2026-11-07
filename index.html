@@ -312,43 +312,79 @@
                         </div>
                     </div>
 
-                    <form id="form-valoracion" onsubmit="guardarValoracion(event)">
+                    
+<form id="form-valoracion" onsubmit="guardarValoracion(event)">
 
-                        <div class="form-grupo">
-                            <label for="val-fortalezas">
-                                VIII. Fortalezas identificadas
-                            </label>
-                            <textarea id="val-fortalezas" rows="3"></textarea>
-                        </div>
+    <!-- Estado de la evaluación -->
+    <div id="estado-valoracion" class="estado-valoracion pendiente">
+        <span class="estado-indicador"></span>
+        <span id="texto-estado-valoracion">
+            Evaluación pendiente
+        </span>
+    </div>
 
-                        <div class="form-grupo">
-                            <label for="val-dificultades">
-                                VIII. Dificultades / Necesidades
-                            </label>
-                            <textarea id="val-dificultades" rows="3"></textarea>
-                        </div>
+    <div class="form-grupo">
+        <label for="val-fortalezas">
+            VIII. Fortalezas identificadas
+        </label>
+        <textarea id="val-fortalezas" rows="3"
+            placeholder="Describe las principales fortalezas del estudiante..."></textarea>
+    </div>
 
-                        <div class="form-grupo">
-                            <label for="val-acuerdo-habitos">
-                                IX. Acuerdo: Hábitos de Estudio
-                            </label>
-                            <textarea id="val-acuerdo-habitos" rows="2"></textarea>
-                        </div>
+    <div class="form-grupo">
+        <label for="val-dificultades">
+            VIII. Dificultades / Necesidades
+        </label>
+        <textarea id="val-dificultades" rows="3"
+            placeholder="Identifica las dificultades o necesidades de apoyo..."></textarea>
+    </div>
 
-                        <div class="form-grupo">
-                            <label for="val-acuerdo-meta">
-                                IX. Acuerdo: Meta Personal
-                            </label>
-                            <textarea id="val-acuerdo-meta" rows="2"></textarea>
-                        </div>
+    <div class="form-grupo">
+        <label for="val-acuerdo-habitos">
+            IX. Acuerdo: Hábitos de Estudio
+        </label>
+        <textarea id="val-acuerdo-habitos" rows="2"
+            placeholder="Establece compromisos relacionados con sus hábitos de estudio..."></textarea>
+    </div>
 
-                        <div class="modal-acciones">
-                            <button type="submit" class="btn-primario" id="btn-guardar-valoracion">
-                                Guardar Evaluación
-                            </button>
-                        </div>
+    <div class="form-grupo">
+        <label for="val-acuerdo-meta">
+            IX. Acuerdo: Meta Personal
+        </label>
+        <textarea id="val-acuerdo-meta" rows="2"
+            placeholder="Define una meta personal para el estudiante..."></textarea>
+    </div>
 
-                    </form>
+    <!-- Acciones -->
+    <div class="modal-acciones">
+
+        <button type="button"
+            id="btn-editar-valoracion"
+            class="btn-secundario"
+            onclick="editarValoracion()"
+            hidden>
+            <i class="fas fa-pen"></i>
+            Editar evaluación
+        </button>
+
+        <button type="button"
+            id="btn-cancelar-valoracion"
+            class="btn-secundario"
+            onclick="cancelarEdicionValoracion()"
+            hidden>
+            Cancelar
+        </button>
+
+        <button type="submit"
+            class="btn-primario"
+            id="btn-guardar-valoracion">
+            Guardar Evaluación
+        </button>
+
+    </div>
+
+</form>
+
 
                 </section>
 
