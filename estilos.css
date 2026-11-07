@@ -1,0 +1,1148 @@
+
+/* =========================================
+   1. CONFIGURACIÓN GENERAL
+========================================= */
+
+:root {
+    --azul: #142d4e;
+    --azul-secundario: #1a4f76;
+    --azul-claro: #eaf2f9;
+    --verde: #249b61;
+    --verde-hover: #19834f;
+    --fondo: #f3f6fa;
+    --blanco: #ffffff;
+    --texto: #253449;
+    --texto-secundario: #718096;
+    --borde: #e5eaf0;
+    --sombra: 0 8px 30px rgba(25, 45, 70, 0.07);
+    --radio: 12px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background: var(--fondo);
+    color: var(--texto);
+    min-height: 100vh;
+    font-size: 14px;
+}
+
+button,
+input,
+select,
+textarea {
+    font: inherit;
+}
+
+button {
+    -webkit-tap-highlight-color: transparent;
+}
+
+
+/* =========================================
+   2. CONTENEDOR PRINCIPAL
+========================================= */
+
+.contenedor {
+    width: 100%;
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 28px 35px;
+}
+
+.panel {
+    width: 100%;
+}
+
+
+/* =========================================
+   3. CABECERA
+========================================= */
+
+.cabecera {
+    background: linear-gradient(120deg, #102640, #1a4f76);
+    color: white;
+    padding: 30px 35px;
+    border-radius: 16px;
+    margin-bottom: 30px;
+    box-shadow: 0 8px 25px rgba(20, 45, 78, 0.16);
+    position: relative;
+    overflow: hidden;
+}
+
+.cabecera::after {
+    content: "";
+    position: absolute;
+    width: 280px;
+    height: 280px;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 50%;
+    right: -70px;
+    top: -130px;
+    box-shadow:
+        0 0 0 25px rgba(255,255,255,0.025),
+        0 0 0 50px rgba(255,255,255,0.02);
+    pointer-events: none;
+}
+
+.cabecera-contenido {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    position: relative;
+    z-index: 1;
+}
+
+.cabecera-icono {
+    width: 65px;
+    height: 65px;
+    min-width: 65px;
+    background: rgba(255,255,255,0.13);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cabecera-icono span {
+    font-size: 23px;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.cabecera-texto {
+    flex: 1;
+}
+
+.cabecera-etiqueta,
+.modal-etiqueta,
+.seccion-etiqueta {
+    display: block;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+}
+
+.cabecera-etiqueta {
+    color: #a9c9e6;
+}
+
+.cabecera h1 {
+    font-size: clamp(21px, 3vw, 29px);
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 7px;
+}
+
+.cabecera p {
+    font-size: 13px;
+    color: #d2dfec;
+}
+
+.cabecera-estado {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #d7f7e5;
+    background: rgba(255,255,255,0.1);
+    padding: 10px 14px;
+    border-radius: 30px;
+    white-space: nowrap;
+}
+
+.estado-punto {
+    width: 8px;
+    height: 8px;
+    background: #54d68a;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(84,214,138,0.6);
+}
+
+
+/* =========================================
+   4. TÍTULO DEL PANEL
+========================================= */
+
+.panel-titulo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.seccion-etiqueta {
+    color: var(--verde);
+    font-size: 10px;
+    margin-bottom: 7px;
+}
+
+.panel-titulo h2 {
+    font-size: 23px;
+    color: var(--azul);
+    margin-bottom: 5px;
+}
+
+.panel-titulo p {
+    font-size: 13px;
+    color: var(--texto-secundario);
+}
+
+.panel-icono {
+    width: 45px;
+    height: 45px;
+    border-radius: 12px;
+    background: var(--azul-claro);
+    color: var(--azul-secundario);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+}
+
+
+/* =========================================
+   5. BUSCADOR Y CONTROLES
+========================================= */
+
+.controles {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.buscador-contenedor {
+    position: relative;
+    flex: 1;
+    max-width: 550px;
+}
+
+.buscador-icono {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-53%);
+    font-size: 25px;
+    color: #8b9aab;
+    pointer-events: none;
+}
+
+#buscador {
+    width: 100%;
+    height: 46px;
+    padding: 0 15px 0 45px;
+    border: 1px solid var(--borde);
+    border-radius: 9px;
+    background: white;
+    font-size: 13px;
+    color: var(--texto);
+    outline: none;
+    transition: 0.2s ease;
+}
+
+#buscador:focus {
+    border-color: var(--azul-secundario);
+    box-shadow: 0 0 0 3px rgba(26,79,118,0.09);
+}
+
+#buscador::placeholder {
+    color: #9ba7b5;
+}
+
+
+/* =========================================
+   6. BOTONES
+========================================= */
+
+.btn-primario,
+.btn-secundario {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 42px;
+    padding: 10px 18px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 700;
+    transition: all 0.2s ease;
+}
+
+.btn-primario {
+    background: var(--verde);
+    color: white;
+    box-shadow: 0 3px 8px rgba(36,155,97,0.15);
+}
+
+.btn-primario:hover {
+    background: var(--verde-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 5px 12px rgba(36,155,97,0.2);
+}
+
+.btn-primario:active,
+.btn-secundario:active {
+    transform: scale(0.98);
+}
+
+.btn-actualizar {
+    white-space: nowrap;
+    min-width: 155px;
+}
+
+.btn-actualizar span {
+    font-size: 19px;
+    line-height: 1;
+}
+
+.btn-secundario {
+    background: #f1f4f7;
+    color: #526174;
+    border: 1px solid #e0e6ec;
+}
+
+.btn-secundario:hover {
+    background: #e5ebf1;
+}
+
+
+/* =========================================
+   7. TABLA PRINCIPAL
+========================================= */
+
+.tabla-contenedor {
+    background: white;
+    border: 1px solid var(--borde);
+    border-radius: var(--radio);
+    box-shadow: var(--sombra);
+    overflow: hidden;
+}
+
+.tabla-cabecera {
+    padding: 20px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--borde);
+    gap: 10px;
+}
+
+.tabla-cabecera h3 {
+    font-size: 15px;
+    color: var(--azul);
+    margin-bottom: 5px;
+}
+
+.tabla-cabecera p {
+    color: var(--texto-secundario);
+    font-size: 12px;
+}
+
+.tabla-etiqueta {
+    background: #edf5fb;
+    color: var(--azul-secundario);
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    padding: 7px 10px;
+    border-radius: 5px;
+    white-space: nowrap;
+}
+
+.tabla-scroll {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#tabla-estudiantes {
+    min-width: 850px;
+}
+
+thead {
+    background: #f7f9fc;
+}
+
+th {
+    color: #607086;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    white-space: nowrap;
+}
+
+th,
+td {
+    padding: 15px 17px;
+    text-align: left;
+    border-bottom: 1px solid #edf0f4;
+}
+
+td {
+    color: #475569;
+    font-size: 13px;
+}
+
+tbody tr {
+    transition: background 0.2s ease;
+}
+
+tbody tr:hover {
+    background: #f5f9fd;
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.celda-vacia {
+    text-align: center;
+    padding: 35px 15px;
+    color: #8b98a9;
+    font-size: 13px;
+}
+
+/* Botones que pueda generar tu JavaScript
+   conservan sus funciones y reciben una apariencia moderna */
+
+td button {
+    margin: 2px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+
+/* =========================================
+   8. PIE DEL PANEL
+========================================= */
+
+.panel-pie {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    padding: 20px 5px;
+    color: #8996a7;
+    font-size: 11px;
+}
+
+.panel-pie span:first-child {
+    color: #249b61;
+}
+
+
+/* =========================================
+   9. MODALES
+========================================= */
+
+.modal-oculto {
+    display: none;
+}
+
+.modal-visible {
+    display: flex;
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background: rgba(12, 27, 45, 0.65);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    overflow-y: auto;
+    animation: aparecerFondo 0.2s ease;
+}
+
+.modal-contenido {
+    background: white;
+    padding: 30px;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 800px;
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+    box-shadow: 0 20px 70px rgba(0,0,0,0.22);
+    position: relative;
+    animation: aparecerModal 0.25s ease;
+}
+
+.modal-perfil-contenido {
+    max-width: 950px;
+}
+
+.modal-formulario {
+    max-width: 560px;
+}
+
+.modal-entrevista-contenido {
+    max-width: 1150px;
+}
+
+@keyframes aparecerFondo {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes aparecerModal {
+    from {
+        opacity: 0;
+        transform: translateY(15px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.cerrar-modal {
+    position: absolute;
+    top: 17px;
+    right: 20px;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f1f4f7;
+    color: #64748b;
+    border-radius: 8px;
+    font-size: 25px;
+    font-weight: 400;
+    cursor: pointer;
+    transition: 0.2s;
+    z-index: 5;
+}
+
+.cerrar-modal:hover {
+    background: #fee9e9;
+    color: #dc3545;
+}
+
+.modal-encabezado {
+    padding-right: 35px;
+    margin-bottom: 20px;
+}
+
+.modal-etiqueta {
+    color: var(--verde);
+    margin-bottom: 8px;
+}
+
+.modal-encabezado h2 {
+    color: var(--azul);
+    font-size: 21px;
+    line-height: 1.4;
+    margin-bottom: 8px;
+    overflow-wrap: anywhere;
+}
+
+.modal-encabezado p {
+    font-size: 13px;
+    color: var(--texto-secundario);
+}
+
+.modal-encabezado p strong {
+    color: var(--azul);
+}
+
+.modal-separador,
+.entrevista-separador {
+    height: 1px;
+    background: var(--borde);
+    margin: 20px 0;
+}
+
+
+/* =========================================
+   10. SUBTÍTULOS DE SECCIONES
+========================================= */
+
+.subtitulo-seccion,
+.entrevista-titulo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.subtitulo-icono,
+.entrevista-icono {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.subtitulo-icono {
+    background: var(--azul-claro);
+    color: var(--azul-secundario);
+}
+
+.subtitulo-seccion h3,
+.entrevista-titulo h3 {
+    color: var(--azul);
+    font-size: 15px;
+    margin-bottom: 4px;
+}
+
+.subtitulo-seccion p,
+.entrevista-titulo p {
+    color: var(--texto-secundario);
+    font-size: 11px;
+}
+
+.tabla-notas {
+    width: 100%;
+    min-width: 650px;
+    border: 1px solid var(--borde);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.tabla-notas th {
+    background: #f3f6fa;
+    padding: 13px;
+}
+
+.tabla-notas td {
+    padding: 13px;
+    border-bottom: 1px solid #edf0f4;
+}
+
+.modal-acciones {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+    margin-top: 22px;
+    flex-wrap: wrap;
+}
+
+
+/* =========================================
+   11. FORMULARIOS
+========================================= */
+
+.alumno-identificacion {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 15px;
+    margin-bottom: 22px;
+    border-radius: 8px;
+    background: #f1f6fb;
+    border: 1px solid #e2ebf4;
+    font-size: 12px;
+    color: #64748b;
+}
+
+.alumno-identificacion strong {
+    color: var(--azul);
+}
+
+.form-grupo {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    margin-bottom: 17px;
+    min-width: 0;
+}
+
+.form-grupo label {
+    color: #34465c;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.5;
+}
+
+.form-grupo input,
+.form-grupo select,
+.form-grupo textarea {
+    width: 100%;
+    min-width: 0;
+    padding: 11px 13px;
+    border: 1px solid #dfe5ec;
+    border-radius: 8px;
+    background: #fff;
+    color: var(--texto);
+    font-size: 13px;
+    outline: none;
+    transition: 0.2s;
+}
+
+.form-grupo input,
+.form-grupo select {
+    min-height: 43px;
+}
+
+.form-grupo textarea {
+    resize: vertical;
+    min-height: 65px;
+    line-height: 1.5;
+}
+
+.form-grupo input:focus,
+.form-grupo select:focus,
+.form-grupo textarea:focus {
+    border-color: var(--azul-secundario);
+    box-shadow: 0 0 0 3px rgba(26,79,118,0.08);
+}
+
+.form-grupo input::placeholder {
+    color: #a4afbd;
+    font-size: 12px;
+}
+
+.form-grupo-doble {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 15px;
+}
+
+.campo-ayuda {
+    color: #8592a2;
+    font-size: 11px;
+    line-height: 1.5;
+    margin-bottom: 3px;
+}
+
+.campo-secundario {
+    margin-top: 8px;
+}
+
+.modal-acciones-form {
+    margin-top: 25px;
+    padding-top: 18px;
+    border-top: 1px solid var(--borde);
+}
+
+
+/* =========================================
+   12. ENTREVISTA PSICOPEDAGÓGICA
+========================================= */
+
+.entrevista-paneles {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 22px;
+    min-height: 400px;
+    max-height: 600px;
+}
+
+.entrevista-panel {
+    min-width: 0;
+    overflow-y: auto;
+    padding: 18px;
+    border: 1px solid var(--borde);
+    border-radius: 11px;
+    background: #fff;
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 transparent;
+}
+
+.panel-respuestas {
+    background: #f9fbfd;
+}
+
+.panel-valoracion {
+    background: #fff;
+}
+
+.entrevista-icono.icono-azul {
+    background: #e8f1fa;
+    color: #1a4f76;
+}
+
+.entrevista-icono.icono-verde {
+    background: #e8f7ef;
+    color: #249b61;
+}
+
+.entrevista-panel .entrevista-titulo {
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--borde);
+}
+
+.respuestas-contenido {
+    font-size: 13px;
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+}
+
+.mensaje-cargando {
+    text-align: center;
+    color: #8996a7;
+    margin-top: 50px;
+}
+
+
+/* =========================================
+   13. SCROLLBARS
+========================================= */
+
+.tabla-scroll::-webkit-scrollbar,
+.modal-contenido::-webkit-scrollbar,
+.entrevista-panel::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+}
+
+.tabla-scroll::-webkit-scrollbar-thumb,
+.modal-contenido::-webkit-scrollbar-thumb,
+.entrevista-panel::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
+
+.tabla-scroll::-webkit-scrollbar-track,
+.modal-contenido::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+
+/* =========================================
+   14. TABLETS
+========================================= */
+
+@media (max-width: 900px) {
+
+    .contenedor {
+        padding: 22px;
+    }
+
+    .cabecera {
+        padding: 25px;
+    }
+
+    .entrevista-paneles {
+        max-height: none;
+        min-height: 0;
+    }
+
+    .modal-entrevista-contenido {
+        max-width: 750px;
+    }
+
+    .modal-contenido {
+        padding: 25px;
+    }
+
+}
+
+
+/* =========================================
+   15. CELULARES
+========================================= */
+
+@media (max-width: 600px) {
+
+    body {
+        font-size: 13px;
+    }
+
+    .contenedor {
+        padding: 12px;
+    }
+
+    .cabecera {
+        padding: 22px 17px;
+        border-radius: 12px;
+        margin-bottom: 23px;
+    }
+
+    .cabecera-contenido {
+        gap: 12px;
+        align-items: flex-start;
+    }
+
+    .cabecera-icono {
+        width: 45px;
+        height: 45px;
+        min-width: 45px;
+        border-radius: 10px;
+    }
+
+    .cabecera-icono span {
+        font-size: 17px;
+    }
+
+    .cabecera-etiqueta {
+        font-size: 8px;
+        letter-spacing: 1.3px;
+    }
+
+    .cabecera h1 {
+        font-size: 19px;
+        line-height: 1.3;
+    }
+
+    .cabecera p {
+        font-size: 11px;
+        line-height: 1.5;
+    }
+
+    .cabecera-estado {
+        display: none;
+    }
+
+    .panel-titulo {
+        margin-bottom: 18px;
+    }
+
+    .panel-titulo h2 {
+        font-size: 20px;
+    }
+
+    .panel-titulo p {
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+    .panel-icono {
+        width: 38px;
+        height: 38px;
+        min-width: 38px;
+    }
+
+    .controles {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+
+    .buscador-contenedor {
+        max-width: none;
+        width: 100%;
+    }
+
+    #buscador {
+        height: 44px;
+    }
+
+    .btn-actualizar {
+        width: 100%;
+    }
+
+    .tabla-cabecera {
+        padding: 16px;
+    }
+
+    .tabla-cabecera h3 {
+        font-size: 14px;
+    }
+
+    .tabla-cabecera p {
+        font-size: 11px;
+    }
+
+    .tabla-etiqueta {
+        display: none;
+    }
+
+    #tabla-estudiantes {
+        min-width: 800px;
+    }
+
+    th,
+    td {
+        padding: 13px 12px;
+    }
+
+    .panel-pie {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 17px 5px;
+        font-size: 10px;
+    }
+
+
+    /* MODALES EN CELULARES */
+
+    .modal-visible {
+        padding: 10px;
+        align-items: center;
+    }
+
+    .modal-contenido {
+        padding: 23px 17px;
+        border-radius: 13px;
+        max-height: calc(100dvh - 20px);
+        width: 100%;
+    }
+
+    .modal-encabezado {
+        padding-right: 30px;
+    }
+
+    .modal-encabezado h2 {
+        font-size: 18px;
+    }
+
+    .modal-encabezado p {
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+    .cerrar-modal {
+        top: 12px;
+        right: 12px;
+        width: 31px;
+        height: 31px;
+        font-size: 22px;
+    }
+
+    .subtitulo-seccion h3,
+    .entrevista-titulo h3 {
+        font-size: 14px;
+    }
+
+    .modal-acciones {
+        width: 100%;
+    }
+
+    .modal-acciones .btn-primario,
+    .modal-acciones .btn-secundario {
+        flex: 1;
+    }
+
+
+    /* FORMULARIO DE SIMULACRO */
+
+    .form-grupo-doble {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    .form-grupo {
+        margin-bottom: 14px;
+    }
+
+    .modal-acciones-form {
+        flex-direction: column-reverse;
+    }
+
+    .modal-acciones-form button {
+        width: 100%;
+        flex: auto !important;
+    }
+
+
+    /* ENTREVISTA EN UNA SOLA COLUMNA */
+
+    .entrevista-paneles {
+        grid-template-columns: 1fr;
+        max-height: none;
+        gap: 14px;
+    }
+
+    .entrevista-panel {
+        max-height: none;
+        overflow: visible;
+        padding: 14px;
+    }
+
+    .panel-respuestas {
+        min-height: 180px;
+    }
+
+    .panel-valoracion {
+        min-height: 0;
+    }
+
+    .entrevista-titulo {
+        margin-bottom: 14px;
+    }
+
+    .entrevista-separador {
+        margin: 15px 0;
+    }
+
+}
+
+
+/* =========================================
+   16. CELULARES PEQUEÑOS
+========================================= */
+
+@media (max-width: 380px) {
+
+    .contenedor {
+        padding: 9px;
+    }
+
+    .cabecera {
+        padding: 18px 13px;
+    }
+
+    .cabecera h1 {
+        font-size: 17px;
+    }
+
+    .panel-titulo h2 {
+        font-size: 18px;
+    }
+
+    .modal-contenido {
+        padding: 20px 13px;
+    }
+
+    .btn-primario,
+    .btn-secundario {
+        padding: 10px 12px;
+        font-size: 12px;
+    }
+
+}
+
+
+/* =========================================
+   17. ACCESIBILIDAD Y MOVIMIENTO
+========================================= */
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 2px solid #3c8bc4;
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}

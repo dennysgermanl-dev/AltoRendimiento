@@ -1,0 +1,364 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#142d4e">
+    <title>Portal Docente - Alto Rendimiento Chilca</title>
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+
+    <div class="contenedor">
+
+        <!-- CABECERA -->
+        <header class="cabecera">
+            <div class="cabecera-contenido">
+                <div class="cabecera-icono">
+                    <span>AR</span>
+                </div>
+
+                <div class="cabecera-texto">
+                    <span class="cabecera-etiqueta">PLATAFORMA ACADÉMICA</span>
+                    <h1>Círculo de Alto Rendimiento Chilca 2027</h1>
+                    <p>Panel de Control Docente · Gestión de Estudiantes</p>
+                </div>
+
+                <div class="cabecera-estado">
+                    <span class="estado-punto"></span>
+                    Sistema activo
+                </div>
+            </div>
+        </header>
+
+        <!-- PANEL PRINCIPAL -->
+        <main class="panel">
+
+            <div class="panel-titulo">
+                <div>
+                    <span class="seccion-etiqueta">ADMINISTRACIÓN ACADÉMICA</span>
+                    <h2>Gestión de estudiantes</h2>
+                    <p>Consulta perfiles, realiza seguimiento y registra evaluaciones.</p>
+                </div>
+                <div class="panel-icono">
+                    <span>01</span>
+                </div>
+            </div>
+
+            <!-- CONTROLES -->
+            <div class="controles">
+                <div class="buscador-contenedor">
+                    <span class="buscador-icono">⌕</span>
+                    <input
+                        type="text"
+                        id="buscador"
+                        placeholder="Buscar por DNI o Apellido..."
+                        autocomplete="off"
+                    >
+                </div>
+
+                <button class="btn-primario btn-actualizar">
+                    <span>↻</span>
+                    Actualizar Datos
+                </button>
+            </div>
+
+            <!-- TABLA -->
+            <div class="tabla-contenedor">
+
+                <div class="tabla-cabecera">
+                    <div>
+                        <h3>Directorio de estudiantes</h3>
+                        <p>Información y seguimiento académico</p>
+                    </div>
+                    <span class="tabla-etiqueta">REGISTRO ACADÉMICO</span>
+                </div>
+
+                <div class="tabla-scroll">
+                    <table id="tabla-estudiantes">
+                        <thead>
+                            <tr>
+                                <th>DNI</th>
+                                <th>Apellidos y Nombres</th>
+                                <th>Carrera de Interés</th>
+                                <th>WhatsApp</th>
+                                <th>Contacto Tutor</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="cuerpo-tabla">
+                            <!-- Los datos se cargarán aquí desde JavaScript -->
+                            <tr>
+                                <td colspan="6" class="celda-vacia">
+                                    Cargando estudiantes...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+            <div class="panel-pie">
+                <span>● Plataforma de gestión académica</span>
+                <span>Círculo de Alto Rendimiento Chilca · 2027</span>
+            </div>
+
+        </main>
+    </div>
+
+
+    <!-- ==========================================
+         MODAL DE NOTAS Y PERFIL
+    =========================================== -->
+
+    <div id="modal-perfil" class="modal-oculto">
+
+        <div class="modal-contenido modal-perfil-contenido">
+
+            <span class="cerrar-modal" onclick="cerrarModal()">&times;</span>
+
+            <div class="modal-encabezado">
+                <span class="modal-etiqueta">PERFIL ACADÉMICO</span>
+                <h2 id="modal-nombre-alumno">Nombre del Alumno</h2>
+                <p><strong>DNI:</strong> <span id="modal-dni-alumno"></span></p>
+            </div>
+
+            <div class="modal-separador"></div>
+
+            <div class="subtitulo-seccion">
+                <div class="subtitulo-icono">01</div>
+                <div>
+                    <h3>Registro de Simulacros</h3>
+                    <p>Historial de evaluaciones y acciones de mejora.</p>
+                </div>
+            </div>
+
+            <div class="tabla-scroll">
+                <table class="tabla-notas">
+                    <thead>
+                        <tr>
+                            <th>Fase</th>
+                            <th>Simulacro</th>
+                            <th>Puntaje</th>
+                            <th>Acción de Mejora</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="modal-cuerpo-notas">
+                        <tr>
+                            <td colspan="5" class="celda-vacia">
+                                No hay notas registradas.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="modal-acciones">
+                <button class="btn-primario" onclick="abrirFormularioNota()">
+                    + Agregar Nota
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- ==========================================
+         MODAL PARA AGREGAR NOTA DE SIMULACRO
+    =========================================== -->
+
+    <div id="modal-simulacro" class="modal-oculto">
+
+        <div class="modal-contenido modal-formulario">
+
+            <span class="cerrar-modal" onclick="cerrarModalSimulacro()">&times;</span>
+
+            <div class="modal-encabezado">
+                <span class="modal-etiqueta">SEGUIMIENTO ACADÉMICO</span>
+                <h2>Registrar Simulacro</h2>
+                <p>Ingresa los resultados de la evaluación del estudiante.</p>
+            </div>
+
+            <div class="alumno-identificacion">
+                <span>Alumno DNI:</span>
+                <strong id="form-dni-alumno"></strong>
+            </div>
+
+            <form id="form-notas" onsubmit="guardarNotaSimulacro(event)">
+
+                <div class="form-grupo-doble">
+
+                    <div class="form-grupo">
+                        <label for="sim-fase">Fase del Programa</label>
+                        <select id="sim-fase" required>
+                            <option value="Fase 1">Fase 1 (Instalación)</option>
+                            <option value="Fase 2">Fase 2 (Intensificación)</option>
+                            <option value="Fase 3">Fase 3 (Consolidación)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-grupo">
+                        <label for="sim-numero">N° Simulacro</label>
+                        <input type="number" id="sim-numero" required min="1" placeholder="Ej. 1">
+                    </div>
+
+                </div>
+
+                <div class="form-grupo-doble">
+
+                    <div class="form-grupo">
+                        <label for="sim-mate">Puntaje Matemática</label>
+                        <input type="number" step="0.01" id="sim-mate" required placeholder="0.00">
+                    </div>
+
+                    <div class="form-grupo">
+                        <label for="sim-letras">Puntaje Letras/RM</label>
+                        <input type="number" step="0.01" id="sim-letras" placeholder="0.00">
+                    </div>
+
+                </div>
+
+                <div class="form-grupo">
+                    <label for="sim-mejora1">Acciones de Mejora</label>
+                    <p class="campo-ayuda">Registra recomendaciones y aspectos que el alumno debe reforzar.</p>
+
+                    <input
+                        type="text"
+                        id="sim-mejora1"
+                        placeholder="1. Ej: Repasar identidades trigonométricas"
+                        required
+                    >
+
+                    <input
+                        type="text"
+                        id="sim-mejora2"
+                        placeholder="2. Ej: Mejorar gestión de tiempo"
+                        class="campo-secundario"
+                    >
+                </div>
+
+                <div class="modal-acciones modal-acciones-form">
+                    <button type="button" class="btn-secundario" onclick="cerrarModalSimulacro()">
+                        Cancelar
+                    </button>
+
+                    <button type="submit" class="btn-primario" id="btn-guardar-nota">
+                        Guardar Nota
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+
+    <!-- ==========================================
+         MODAL DE ENTREVISTA DIAGNÓSTICA
+    =========================================== -->
+
+    <div id="modal-entrevista" class="modal-oculto">
+
+        <div class="modal-contenido modal-entrevista-contenido">
+
+            <span class="cerrar-modal" onclick="cerrarModalEntrevista()">&times;</span>
+
+            <div class="modal-encabezado">
+                <span class="modal-etiqueta">EVALUACIÓN Y ORIENTACIÓN</span>
+                <h2>
+                    Evaluación Psicopedagógica:
+                    <span id="entrevista-nombre-alumno"></span>
+                </h2>
+                <p>Consulta las respuestas del estudiante y registra tu valoración docente.</p>
+            </div>
+
+            <div class="entrevista-separador"></div>
+
+            <div class="entrevista-paneles">
+
+                <!-- PANEL IZQUIERDO -->
+                <section class="entrevista-panel panel-respuestas">
+
+                    <div class="entrevista-titulo">
+                        <div class="entrevista-icono icono-azul">01</div>
+                        <div>
+                            <h3>Respuestas del Alumno</h3>
+                            <p>Información de la entrevista diagnóstica.</p>
+                        </div>
+                    </div>
+
+                    <div id="entrevista-respuestas-alumno" class="respuestas-contenido">
+                        <p class="mensaje-cargando">
+                            Buscando respuestas...
+                        </p>
+                    </div>
+
+                </section>
+
+
+                <!-- PANEL DERECHO -->
+                <section class="entrevista-panel panel-valoracion">
+
+                    <div class="entrevista-titulo">
+                        <div class="entrevista-icono icono-verde">02</div>
+                        <div>
+                            <h3>Valoración Docente</h3>
+                            <p>Registro de observaciones y acuerdos.</p>
+                        </div>
+                    </div>
+
+                    <form id="form-valoracion" onsubmit="guardarValoracion(event)">
+
+                        <div class="form-grupo">
+                            <label for="val-fortalezas">
+                                VIII. Fortalezas identificadas
+                            </label>
+                            <textarea id="val-fortalezas" rows="3"></textarea>
+                        </div>
+
+                        <div class="form-grupo">
+                            <label for="val-dificultades">
+                                VIII. Dificultades / Necesidades
+                            </label>
+                            <textarea id="val-dificultades" rows="3"></textarea>
+                        </div>
+
+                        <div class="form-grupo">
+                            <label for="val-acuerdo-habitos">
+                                IX. Acuerdo: Hábitos de Estudio
+                            </label>
+                            <textarea id="val-acuerdo-habitos" rows="2"></textarea>
+                        </div>
+
+                        <div class="form-grupo">
+                            <label for="val-acuerdo-meta">
+                                IX. Acuerdo: Meta Personal
+                            </label>
+                            <textarea id="val-acuerdo-meta" rows="2"></textarea>
+                        </div>
+
+                        <div class="modal-acciones">
+                            <button type="submit" class="btn-primario" id="btn-guardar-valoracion">
+                                Guardar Evaluación
+                            </button>
+                        </div>
+
+                    </form>
+
+                </section>
+
+            </div>
+
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT ORIGINAL -->
+    <script src="app.js"></script>
+
+</body>
+</html>
