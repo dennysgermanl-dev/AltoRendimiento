@@ -617,35 +617,119 @@ async function abrirEntrevista(dniAlumno, nombreAlumno) {
 
         const entrevista = datos[0];
 
-        // Mostrar respuestas del estudiante
-        const escapar = valor => String(valor ?? '')
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;')
-            .replace(/'/g, '&#039;');
+       // Mostrar TODAS las respuestas del estudiante
+const escapar = valor => String(valor ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
 
-        panelAlumno.innerHTML = `
-            <div class="respuesta-item">
-                <strong>Horas de estudio al día:</strong>
-                <span>${escapar(entrevista.horas_estudio || 'No especificado')}</span>
-            </div>
+// Mostrar valores sin perder los datos 0 o false
+const mostrarValor = valor => {
+    if (valor === null || valor === undefined || valor === '') {
+        return 'No especificado';
+    }
 
-            <div class="respuesta-item">
-                <strong>Carrera 1ra Opción:</strong>
-                <span>${escapar(entrevista.carrera_primera_opcion || 'No especificado')}</span>
-            </div>
+    if (typeof valor === 'boolean') {
+        return valor ? 'Sí' : 'No';
+    }
 
-            <div class="respuesta-item">
-                <strong>¿Qué le interrumpe?</strong>
-                <span>${escapar(entrevista.interrupciones_estudio || 'No especificado')}</span>
-            </div>
+    return escapar(valor);
+};
 
-            <div class="respuesta-item">
-                <strong>Manejo de Ansiedad:</strong>
-                <span>${escapar(entrevista.manejo_ansiedad || 'No especificado')}</span>
-            </div>
-        `;
+// Definir todos los campos del diagnóstico
+const camposEntrevista = [
+    {
+        titulo: 'Experiencia en secundaria',
+        campo: 'experiencia_secundaria'
+    },
+    {
+        titulo: 'Cursos en los que destaca',
+        campo: 'cursos_fortaleza'
+    },
+    {
+        titulo: 'Cursos que presentan dificultades',
+        campo: 'cursos_dificultad'
+    },
+    {
+        titulo: 'Horas de estudio al día',
+        campo: 'horas_estudio'
+    },
+    {
+        titulo: '¿Tiene un horario de estudio?',
+        campo: 'tiene_horario'
+    },
+    {
+        titulo: 'Técnicas de estudio',
+        campo: 'tecnicas_estudio'
+    },
+    {
+        titulo: '¿Qué le interrumpe durante el estudio?',
+        campo: 'interrupciones_estudio'
+    },
+    {
+        titulo: 'Organización del tiempo',
+        campo: 'organizacion_tiempo'
+    },
+    {
+        titulo: 'Motivación para ingresar a San Marcos',
+        campo: 'motivo_san_marcos'
+    },
+    {
+        titulo: 'Carrera de primera opción',
+        campo: 'carrera_primera_opcion'
+    },
+    {
+        titulo: 'Carrera de segunda opción',
+        campo: 'carrera_segunda_opcion'
+    },
+    {
+        titulo: 'Reacción ante una calificación baja',
+        campo: 'reaccion_baja_nota'
+    },
+    {
+        titulo: 'Manejo de ansiedad',
+        campo: 'manejo_ansiedad'
+    },
+    {
+        titulo: 'Compromiso con el programa',
+        campo: 'compromiso_programa'
+    }
+];
+
+// Generar automáticamente las respuestas
+panelAlumno.innerHTML = `
+    <div class="entrevista-respuestas-completas">
+
+        <div class="entrevista-seccion-titulo">
+            <h3>Diagnóstico del estudiante</h3>
+            <span>Información proporcionada por el alumno</span>
+        </div>
+
+        <div class="entrevista-respuestas-grid">
+
+            ${camposEntrevista.map(item => `
+                <div class="respuesta-item">
+                    <strong>${escapar(item.titulo)}</strong>
+                    <span>${mostrarValor(entrevista[item.campo])}</span>
+                </div>
+            `).join('')}
+
+        </div>
+
+        <div class="entrevista-fecha">
+            <strong>Fecha de entrevista:</strong>
+            <span>
+                ${entrevista.fecha_entrevista
+                    ? escapar(new Date(entrevista.fecha_entrevista)
+                        .toLocaleString('es-PE'))
+                    : 'No especificada'}
+            </span>
+        </div>
+
+    </div>
+`;
 
         // Recuperar valoración anterior
         const valoracion = {
