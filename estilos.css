@@ -1146,3 +1146,212 @@ textarea:focus-visible {
         transition-duration: 0.01ms !important;
     }
 }
+
+
+
+
+/* ==========================================
+   ESTADOS DE LA VALORACIÓN
+========================================== */
+
+.estado-valoracion {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 15px;
+    border-radius: 9px;
+    margin-bottom: 22px;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all .25s ease;
+}
+
+.estado-indicador {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.estado-valoracion.pendiente {
+    background: #fff7e6;
+    color: #a16207;
+}
+
+.estado-valoracion.pendiente .estado-indicador {
+    background: #eab308;
+}
+
+.estado-valoracion.registrada {
+    background: #eaf8ef;
+    color: #16834c;
+}
+
+.estado-valoracion.registrada .estado-indicador {
+    background: #22a06b;
+}
+
+.estado-valoracion.editando {
+    background: #edf4ff;
+    color: #2563eb;
+}
+
+.estado-valoracion.editando .estado-indicador {
+    background: #3b82f6;
+}
+
+.estado-valoracion.guardando {
+    background: #eff6ff;
+    color: #1d4ed8;
+}
+
+.estado-valoracion.guardando .estado-indicador {
+    background: #3b82f6;
+    animation: pulsoEstado 1s infinite;
+}
+
+.estado-valoracion.error {
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+.estado-valoracion.error .estado-indicador {
+    background: #dc2626;
+}
+
+@keyframes pulsoEstado {
+    50% {
+        opacity: .3;
+    }
+}
+
+/* ==========================================
+   CAMPOS DEL FORMULARIO
+========================================== */
+
+.panel-valoracion textarea {
+    width: 100%;
+    resize: vertical;
+    transition: border-color .2s, background .2s;
+}
+
+.panel-valoracion textarea:focus {
+    outline: none;
+    border-color: #219b67;
+    box-shadow: 0 0 0 3px rgba(33, 155, 103, .10);
+}
+
+.panel-valoracion textarea:disabled {
+    background: #f5f7fa;
+    color: #475569;
+    cursor: default;
+    opacity: 1;
+}
+
+/* ==========================================
+   BOTONES DE ACCIÓN
+========================================== */
+
+.modal-acciones {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 25px;
+}
+
+.btn-secundario {
+    padding: 12px 20px;
+    border: 1px solid #d7e0eb;
+    border-radius: 10px;
+    background: #fff;
+    color: #334155;
+    font-weight: 600;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.btn-secundario:hover {
+    background: #f1f5f9;
+    border-color: #94a3b8;
+}
+
+.btn-primario:disabled,
+.btn-secundario:disabled {
+    opacity: .55;
+    cursor: not-allowed;
+}
+
+[hidden] {
+    display: none !important;
+}
+
+/* ==========================================
+   NOTIFICACIONES
+========================================== */
+
+.notificacion-valoracion {
+    position: fixed;
+    top: 25px;
+    right: 25px;
+    z-index: 100000;
+    max-width: calc(100vw - 40px);
+    padding: 15px 22px;
+    border-radius: 10px;
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: 0 8px 25px rgba(0,0,0,.15);
+    opacity: 0;
+    transform: translateY(-15px);
+    pointer-events: none;
+    transition: all .3s ease;
+}
+
+.notificacion-valoracion.mostrar {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.notificacion-valoracion.success {
+    background: #168b58;
+}
+
+.notificacion-valoracion.error {
+    background: #dc2626;
+}
+
+/* ==========================================
+   RESPUESTAS DEL ALUMNO
+========================================== */
+
+.respuesta-item {
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+
+.respuesta-item strong {
+    display: block;
+    margin-bottom: 3px;
+}
+
+.respuesta-item span {
+    overflow-wrap: anywhere;
+}
+
+.entrevista-pendiente {
+    padding: 18px;
+    border-radius: 10px;
+    background: #fff7e6;
+    color: #92400e;
+}
+
+.entrevista-pendiente p {
+    margin-bottom: 0;
+}
+
+.error-entrevista {
+    color: #dc2626;
+    text-align: center;
+}
