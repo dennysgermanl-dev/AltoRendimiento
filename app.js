@@ -462,127 +462,422 @@ async function guardarNotaSimulacro(evento) {
     }
 }
 
-// ==========================================
-// GESTIÓN DE LA ENTREVISTA DIAGNÓSTICA
-// ==========================================
+
+/* ==========================================
+   GESTIÓN DE ENTREVISTA DIAGNÓSTICA
+========================================== */
 
 let dniEntrevistaActual = '';
+let valoracionGuardada = false;
+let datosOriginalesValoracion = {};
 
+// Campos de la valoración docente
+const camposValoracion = {
+    fortalezas: 'val-fortalezas',
+    dificultades: 'val-dificultades',
+    acuerdo_habitos: 'val-acuerdo-habitos',
+    acuerdo_meta: 'val-acuerdo-meta'
+};
+
+// Obtener información del formulario
+function obtenerDatosValoracion() {
+    const datos = {};
+
+    Object.entries(camposValoracion).forEach(([campo, id]) => {
+        datos[campo] = document.getElementById(id).value;
+    });
+
+    return datos;
+}
+
+// Cargar información en el formulario
+function cargarDatosValoracion(datos) {
+    Object.entries(camposValoracion).forEach(([campo, id]) => {
+        document.getElementById(id).value = datos[campo] || '';
+    });
+}
+
+// Comprobar si existe una valoración registrada
+function tieneValoracion(datos) {
+    return Object.values(datos).some(valor =>
+        String(valor || '').trim() !== ''
+    );
+}
+
+// Cambiar estado visual
+function actualizarEstadoValoracion(estado, mensaje) {
+    const contenedor = document.getElementById('estado-valoracion');
+    const texto = document.getElementById('texto-estado-valoracion');
+
+    contenedor.className = `estado-valoracion ${estado}`;
+    texto.textContent = mensaje;
+}
+
+// Activar o desactivar campos
+function establecerEdicion(activo) {
+    Object.values(camposValoracion).forEach(id => {
+        document.getElementById(id).disabled = !activo;
+    });
+
+    document.getElementById('btn-guardar-valoracion').hidden = !activo;
+    document.getElementById('btn-editar-valoracion').hidden = activo;
+    document.getElementById('btn-cancelar-valoracion').hidden = !activo;
+}
+
+// Abrir entrevista
 async function abrirEntrevista(dniAlumno, nombreAlumno) {
-    dniEntrevistaActual = dniAlumno;
-    document.getElementById('entrevista-nombre-alumno').textContent = nombreAlumno;
-    
-    const panelAlumno = document.getElementById('entrevista-respuestas-alumno');
-    panelAlumno.innerHTML = '<p style="text-align:center; margin-top: 50px;">Consultando base de datos...</p>';
-    
-    // Limpiar formulario docente
-    document.getElementById('form-valoracion').reset();
-    document.getElementById('btn-guardar-valoracion').disabled = true;
 
-    // Mostrar Modal
+    dniEntrevistaActual = dniAlumno;
+    valoracionGuardada = false;
+
+    document.getElementById('entrevista-nombre-alumno').textContent =
+        nombreAlumno;
+
+    const panelAlumno = document.getElementById(
+        'entrevista-respuestas-alumno'
+    );
+
+    const formulario = document.getElementById('form-valoracion');
+    const botonGuardar = document.getElementById(
+        'btn-guardar-valoracion'
+    );
+
+    formulario.reset();
+    establecerEdicion(false);
+
+    botonGuardar.disabled = true;
+    actualizarEstadoValoracion('pendiente', 'Consultando evaluación...');
+
+    panelAlumno.innerHTML = `
+        <p class="mensaje-cargando">
+            Consultando información del estudiante...
+        </p>
+    `;
+
     const modal = document.getElementById('modal-entrevista');
     modal.classList.remove('modal-oculto');
     modal.classList.add('modal-visible');
 
     try {
-        const url = `https://pfmkygwbnbrdhykhrnao.supabase.co/rest/v1/entrevistas_diagnosticas?dni_estudiante=eq.${dniAlumno}&select=*`;
-        
+
+        const url = new URL(
+            'https://pfmkygwbnbrdhykhrnao.supabase.co/rest/v1/entrevistas_diagnosticas'
+        );
+
+        url.searchParams.set('dni_estudiante', `eq.${dniAlumno}`);
+        url.searchParams.set('select', '*');
+
         const respuesta = await fetch(url, {
             method: 'GET',
-            headers: { 'apikey': supabaseKey, 'Authorization': 'Bearer ' + supabaseKey }
+            headers: {
+                'apikey': supabaseKey,
+                'Authorization': 'Bearer ' + supabaseKey
+            }
         });
+
+        if (!respuesta.ok) {
+            throw new Error('No se pudieron consultar los datos.');
+        }
 
         const datos = await respuesta.json();
 
-        if (datos.length === 0) {
+        if (!datos.length) {
+
             panelAlumno.innerHTML = `
-                <div style="background: #fff3cd; color: #856404; padding: 15px; border-radius: 5px; text-align: center;">
-                    <strong>Pendiente</strong><br>
-                    El alumno aún no ha completado el formulario de diagnóstico en Google Forms.
-                </div>`;
+                <div class="entrevista-pendiente">
+                    <strong>Entrevista pendiente</strong>
+                    <p>
+                        El alumno aún no ha completado el formulario
+                        de diagnóstico.
+                    </p>
+                </div>
+            `;
+
+            actualizarEstadoValoracion(
+                'pendiente',
+                'Esperando respuestas del estudiante'
+            );
+
             return;
         }
 
-        const entrevista = datos[0]; // Tomamos el primer registro
+        const entrevista = datos[0];
 
-        // Renderizar respuestas del alumno (resumen de ejemplo)
+        // Mostrar respuestas del estudiante
+        const escapar = valor => String(valor ?? '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+
         panelAlumno.innerHTML = `
-            <div style="margin-bottom: 15px;">
-                <strong>Horas de estudio al día:</strong> ${entrevista.horas_estudio || 'No especificado'}
+            <div class="respuesta-item">
+                <strong>Horas de estudio al día:</strong>
+                <span>${escapar(entrevista.horas_estudio || 'No especificado')}</span>
             </div>
-            <div style="margin-bottom: 15px;">
-                <strong>Carrera 1ra Opción:</strong> ${entrevista.carrera_primera_opcion || 'No especificado'}
+
+            <div class="respuesta-item">
+                <strong>Carrera 1ra Opción:</strong>
+                <span>${escapar(entrevista.carrera_primera_opcion || 'No especificado')}</span>
             </div>
-            <div style="margin-bottom: 15px;">
-                <strong>¿Qué le interrumpe?:</strong> ${entrevista.interrupciones_estudio || 'No especificado'}
+
+            <div class="respuesta-item">
+                <strong>¿Qué le interrumpe?</strong>
+                <span>${escapar(entrevista.interrupciones_estudio || 'No especificado')}</span>
             </div>
-            <div style="margin-bottom: 15px;">
-                <strong>Manejo de Ansiedad:</strong> ${entrevista.manejo_ansiedad || 'No especificado'}
+
+            <div class="respuesta-item">
+                <strong>Manejo de Ansiedad:</strong>
+                <span>${escapar(entrevista.manejo_ansiedad || 'No especificado')}</span>
             </div>
         `;
 
-        // Llenar formulario docente si ya lo había evaluado antes
-        document.getElementById('val-fortalezas').value = entrevista.docente_fortalezas || '';
-        document.getElementById('val-dificultades').value = entrevista.docente_dificultades || '';
-        document.getElementById('val-acuerdo-habitos').value = entrevista.acuerdo_habitos || '';
-        document.getElementById('val-acuerdo-meta').value = entrevista.acuerdo_meta || '';
+        // Recuperar valoración anterior
+        const valoracion = {
+            fortalezas: entrevista.docente_fortalezas || '',
+            dificultades: entrevista.docente_dificultades || '',
+            acuerdo_habitos: entrevista.acuerdo_habitos || '',
+            acuerdo_meta: entrevista.acuerdo_meta || ''
+        };
 
-        // Habilitar botón de guardado solo si el alumno ya respondió
-        document.getElementById('btn-guardar-valoracion').disabled = false;
+        cargarDatosValoracion(valoracion);
+
+        datosOriginalesValoracion = { ...valoracion };
+
+        valoracionGuardada = tieneValoracion(valoracion);
+
+        botonGuardar.disabled = false;
+
+        if (valoracionGuardada) {
+
+            establecerEdicion(false);
+
+            actualizarEstadoValoracion(
+                'registrada',
+                'Evaluación registrada'
+            );
+
+        } else {
+
+            establecerEdicion(true);
+
+            actualizarEstadoValoracion(
+                'pendiente',
+                'Pendiente de valoración docente'
+            );
+        }
 
     } catch (error) {
-        console.error(error);
-        panelAlumno.innerHTML = '<p style="color:red; text-align:center;">Error al cargar datos.</p>';
+
+        console.error('Error al abrir entrevista:', error);
+
+        panelAlumno.innerHTML = `
+            <p class="error-entrevista">
+                No fue posible cargar la información.
+                Intenta nuevamente.
+            </p>
+        `;
+
+        actualizarEstadoValoracion(
+            'error',
+            'Error al consultar la información'
+        );
     }
 }
 
+
+// Guardar o actualizar valoración
 async function guardarValoracion(evento) {
+
     evento.preventDefault();
-    const boton = document.getElementById('btn-guardar-valoracion');
+
+    if (!dniEntrevistaActual) {
+        alert('No se ha seleccionado un estudiante.');
+        return;
+    }
+
+    const boton = document.getElementById(
+        'btn-guardar-valoracion'
+    );
+
+    const botonEditar = document.getElementById(
+        'btn-editar-valoracion'
+    );
+
+    const botonCancelar = document.getElementById(
+        'btn-cancelar-valoracion'
+    );
+
+    const datos = obtenerDatosValoracion();
+
+    // Evitar guardar un formulario completamente vacío
+    if (!tieneValoracion(datos)) {
+        alert('Completa al menos un campo de la valoración docente.');
+        return;
+    }
+
+    boton.disabled = true;
     boton.textContent = 'Guardando...';
-    
-    const payload = {
-        docente_fortalezas: document.getElementById('val-fortalezas').value,
-        docente_dificultades: document.getElementById('val-dificultades').value,
-        acuerdo_habitos: document.getElementById('val-acuerdo-habitos').value,
-        acuerdo_meta: document.getElementById('val-acuerdo-meta').value
-    };
+
+    botonEditar.disabled = true;
+    botonCancelar.disabled = true;
+
+    actualizarEstadoValoracion(
+        'guardando',
+        'Guardando evaluación...'
+    );
 
     try {
-        // Usamos PATCH para actualizar la fila existente del alumno
-        const respuesta = await fetch(`https://pfmkygwbnbrdhykhrnao.supabase.co/rest/v1/entrevistas_diagnosticas?dni_estudiante=eq.${dniEntrevistaActual}`, {
+
+        const url = new URL(
+            'https://pfmkygwbnbrdhykhrnao.supabase.co/rest/v1/entrevistas_diagnosticas'
+        );
+
+        url.searchParams.set(
+            'dni_estudiante',
+            `eq.${dniEntrevistaActual}`
+        );
+
+        const respuesta = await fetch(url, {
             method: 'PATCH',
             headers: {
                 'apikey': supabaseKey,
                 'Authorization': 'Bearer ' + supabaseKey,
                 'Content-Type': 'application/json',
-                'Prefer': 'return=minimal'
+                'Prefer': 'return=representation'
             },
-            body: JSON.stringify(payload)
+            body: JSON.stringify({
+                docente_fortalezas: datos.fortalezas,
+                docente_dificultades: datos.dificultades,
+                acuerdo_habitos: datos.acuerdo_habitos,
+                acuerdo_meta: datos.acuerdo_meta
+            })
         });
 
-        if (!respuesta.ok) throw new Error('Error al actualizar');
-        alert('Valoración guardada correctamente');
-        
+        if (!respuesta.ok) {
+            const error = await respuesta.text();
+            throw new Error(error || 'Error al actualizar.');
+        }
+
+        const registrosActualizados = await respuesta.json();
+
+        // Verificar que Supabase realmente haya actualizado una fila
+        if (!Array.isArray(registrosActualizados) ||
+            registrosActualizados.length === 0) {
+            throw new Error(
+                'No se encontró el registro del estudiante o no tienes permisos para modificarlo.'
+            );
+        }
+
+        // Actualizar estado local
+        datosOriginalesValoracion = { ...datos };
+        valoracionGuardada = true;
+
+        establecerEdicion(false);
+
+        actualizarEstadoValoracion(
+            'registrada',
+            'Evaluación guardada correctamente'
+        );
+
+        // Mensaje visual sin interrumpir al docente
+        mostrarNotificacion(
+            'Evaluación guardada correctamente.',
+            'success'
+        );
+
     } catch (error) {
-        console.error(error);
-        alert('Error al guardar la valoración.');
+
+        console.error('Error al guardar:', error);
+
+        actualizarEstadoValoracion(
+            'error',
+            'No se pudo guardar la evaluación'
+        );
+
+        mostrarNotificacion(
+            error.message || 'Ocurrió un error al guardar.',
+            'error'
+        );
+
     } finally {
+
         boton.textContent = 'Guardar Evaluación';
+        boton.disabled = false;
+
+        botonEditar.disabled = false;
+        botonCancelar.disabled = false;
     }
 }
 
-function cerrarModalEntrevista() {
-    const modal = document.getElementById('modal-entrevista');
-    modal.classList.remove('modal-visible');
-    modal.classList.add('modal-oculto');
+
+// Activar edición
+function editarValoracion() {
+
+    establecerEdicion(true);
+
+    actualizarEstadoValoracion(
+        'editando',
+        'Estás editando una evaluación registrada'
+    );
+
+    document.getElementById('btn-guardar-valoracion').textContent =
+        'Guardar cambios';
 }
 
-// Añade la regla de cierre al window.onclick existente
-const oldWindowClick = window.onclick;
-window.onclick = function(event) {
-    if (oldWindowClick) oldWindowClick(event); // Mantener clics anteriores
-    const modalEntrevista = document.getElementById('modal-entrevista');
-    // Para la entrevista, no queremos que se cierre accidentalmente si el docente está escribiendo
-    // Así que NO agregamos el event.target === modalEntrevista para cerrarlo, forzamos a usar la X.
+
+// Cancelar edición
+function cancelarEdicionValoracion() {
+
+    // Recuperar los datos guardados anteriormente
+    cargarDatosValoracion(datosOriginalesValoracion);
+
+    establecerEdicion(false);
+
+    actualizarEstadoValoracion(
+        'registrada',
+        'Evaluación registrada'
+    );
+
+    document.getElementById('btn-guardar-valoracion').textContent =
+        'Guardar Evaluación';
+}
+
+
+// Notificaciones visuales
+function mostrarNotificacion(mensaje, tipo = 'success') {
+
+    let notificacion = document.getElementById(
+        'notificacion-valoracion'
+    );
+
+    if (!notificacion) {
+
+        notificacion = document.createElement('div');
+        notificacion.id = 'notificacion-valoracion';
+
+        document.body.appendChild(notificacion);
+    }
+
+    notificacion.className = `notificacion-valoracion ${tipo}`;
+    notificacion.textContent = mensaje;
+
+    notificacion.classList.add('mostrar');
+
+    clearTimeout(window.timeoutNotificacion);
+
+    window.timeoutNotificacion = setTimeout(() => {
+        notificacion.classList.remove('mostrar');
+    }, 3500);
+}
+
+
+// Cerrar modal
+function cerrarModalEntrevista() {
+
+    const modal = document.getElementById('modal-entrevista');
+
+    modal.classList.remove('modal-visible');
+    modal.classList.add('modal-oculto');
 }
