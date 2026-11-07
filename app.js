@@ -1224,14 +1224,23 @@ function cerrarModalEntrevista() {
         loadDatabase();
     }
 
-    // Permite abrir la ficha integral directamente desde el directorio principal.
-    window.abrirExpedienteIntegral = async function(dni) {
-        ensureModule();
-        document.getElementById('db-module-overlay').classList.add('db-open');
-        document.body.style.overflow = 'hidden';
-        if (!state.loaded) await loadDatabase();
-        showStudentDetail(String(dni));
-    };
+
+// Permite abrir el expediente sin mostrar el módulo Base de datos.
+window.abrirExpedienteIntegral = async function(dni) {
+    ensureModule();
+
+    // Mantener cerrado el módulo principal de Base de datos.
+    closeModule();
+
+    // Si los datos aún no se han cargado, consultarlos en segundo plano.
+    if (!state.loaded) {
+        await loadDatabase();
+    }
+
+    // Mostrar únicamente el expediente del estudiante.
+    showStudentDetail(String(dni));
+};
+
 
     function closeModule() {
         document.getElementById('db-module-overlay')?.classList.remove('db-open');
